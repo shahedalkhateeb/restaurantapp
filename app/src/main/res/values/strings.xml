@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Restaurant App</string>
+    <string name="search_hint">Search for dishes</string>
+    <string name="categories">Categories</string>
+    <string name="popular_dishes">Popular Dishes</string>
+    <string name="apply_filters">Apply Filters</string>
+    <string name="change_language">Change Language</string>
+    <string name="choose_language">Choose Language</string>
+    <string name="toggle_theme">Toggle Theme</string>
+    <string name="title_activity_google_maps">GoogleMAps</string>
+
+</resources>
