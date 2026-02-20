@@ -1,4 +1,4 @@
-name: Android CI
+name: Android CI/CD
 
 on:
   push:
@@ -44,6 +44,21 @@ jobs:
 
     - name: Run Instrumented Tests
       run: ./gradlew connectedAndroidTest
+
+    - name: Run Unit Tests with Jacoco
+      run: ./gradlew testDebugUnitTest jacocoTestReport
+
+    - name: Upload Jacoco Coverage Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: code-coverage
+        path: app/build/reports/jacoco/testDebugUnitTest
+
+    - name: Upload Test Reports
+      uses: actions/upload-artifact@v3
+      with:
+        name: test-reports
+        path: app/build/reports/tests/testDebugUnitTest
 
     - name: Upload APK
       uses: actions/upload-artifact@v3
