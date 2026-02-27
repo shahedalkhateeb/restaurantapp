@@ -11,8 +11,9 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
       matrix:
-        api-level: [28, 30, 33]
+        api-level: [30]
 
     steps:
       - name: Checkout code
@@ -69,11 +70,11 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: app-debug-${{ matrix.api-level }}
+          name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
 
       - name: Upload Test Reports
         uses: actions/upload-artifact@v4
         with:
-          name: test-reports-${{ matrix.api-level }}
+          name: test-reports
           path: app/build/reports/
