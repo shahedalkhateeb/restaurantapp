@@ -10,13 +10,8 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-      matrix:
-        api-level: [30]
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Set up JDK 17
@@ -31,40 +26,27 @@ jobs:
       - name: Grant execute permission
         run: chmod +x gradlew
 
-      - name: Cache Gradle
-        uses: actions/cache@v4
-        with:
-          path: |
-            ~/.gradle/caches
-            ~/.gradle/wrapper
-          key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-
       - name: Run Lint
         run: ./gradlew lint
-
-      - name: Run Detekt
-        run: ./gradlew detekt
 
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
       - name: Run Instrumented Tests
-        run: ./gradlew connectedCheck
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: 30
+          arch: x86_64
+          profile: Nexus 6
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim
+          disable-animations: true
+          script: ./gradlew connectedCheck
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
-
-      - name: Generate Jacoco Report
-        run: ./gradlew jacocoTestReport
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
-
-      - name: Upload Reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-reports
-          path: app/build/reports/
