@@ -28,7 +28,7 @@ jobs:
       - name: Create local.properties
         run: echo "sdk.dir=$ANDROID_SDK_ROOT" > local.properties
 
-      - name: Grant execute permission for gradlew
+      - name: Grant execute permission
         run: chmod +x gradlew
 
       - name: Cache Gradle
@@ -38,8 +38,6 @@ jobs:
             ~/.gradle/caches
             ~/.gradle/wrapper
           key: gradle-${{ runner.os }}-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: |
-            gradle-${{ runner.os }}-
 
       - name: Run Lint
         run: ./gradlew lint
@@ -50,30 +48,22 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Run Instrumented Tests on Emulator
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: google_apis
-          arch: x86_64
-          profile: Nexus 6
-          emulator-options: -no-window -no-audio -no-boot-anim
-          disable-animations: true
-          script: ./gradlew connectedDebugAndroidTest
+      - name: Run Instrumented Tests
+        run: ./gradlew connectedCheck
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
 
-      - name: Generate Jacoco Test Report
+      - name: Generate Jacoco Report
         run: ./gradlew jacocoTestReport
 
-      - name: Upload APK Artifact
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: app-debug
           path: app/build/outputs/apk/debug/app-debug.apk
 
-      - name: Upload Test Reports
+      - name: Upload Reports
         uses: actions/upload-artifact@v4
         with:
           name: test-reports
