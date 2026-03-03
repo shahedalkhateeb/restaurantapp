@@ -8,9 +8,6 @@ on:
 
 jobs:
 
-  # ─────────────────────────────────────
-  # JOB 1: Lint + Detekt + Unit Tests + Build APK
-  # ─────────────────────────────────────
   build:
     name: Lint + Unit Tests + Build
     runs-on: ubuntu-latest
