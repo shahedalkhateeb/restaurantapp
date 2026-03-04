@@ -45,7 +45,7 @@ jobs:
         run: ./gradlew testDebugUnitTest
 
       - name: Generate Coverage Report (Jacoco)
-        run: ./gradlew jacocoTestReport
+        run: ./gradlew app:jacocoTestReport
 
       - name: Upload Unit Test Report
         uses: actions/upload-artifact@v4
@@ -70,9 +70,6 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-  # ─────────────────────────────────────
-  # JOB 2: Instrumented Tests (Espresso)
-  # ─────────────────────────────────────
   instrumented-tests:
     name: Instrumented Tests (API ${{ matrix.api-level }})
     runs-on: ubuntu-latest
