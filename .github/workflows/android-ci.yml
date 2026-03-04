@@ -6,8 +6,11 @@ on:
   pull_request:
     branches: [ master ]
 
-jobs: 
+jobs:
 
+  # ─────────────────────────────────────
+  # JOB 1: Lint + Unit Tests + Build APK
+  # ─────────────────────────────────────
   build:
     name: Lint + Unit Tests + Build
     runs-on: ubuntu-latest
@@ -44,9 +47,6 @@ jobs:
       - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
 
-      - name: Generate Jacoco Coverage Report
-        run: ./gradlew app:jacocoTestReport
-
       - name: Upload Unit Test Report
         uses: actions/upload-artifact@v4
         if: always()
@@ -59,7 +59,7 @@ jobs:
         if: always()
         with:
           name: coverage-report
-          path: app/build/reports/jacoco/jacocoTestReport/
+          path: app/build/reports/coverage/
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
@@ -70,7 +70,9 @@ jobs:
           name: debug-apk
           path: app/build/outputs/apk/debug/app-debug.apk
 
-
+  # ─────────────────────────────────────
+  # JOB 2: Instrumented Tests (Espresso)
+  # ─────────────────────────────────────
   instrumented-tests:
     name: Instrumented Tests (API ${{ matrix.api-level }})
     runs-on: ubuntu-latest
