@@ -7,6 +7,7 @@ on:
     branches: [ master ]
 
 jobs:
+
   build:
     name: Lint + Unit Tests + Build
     runs-on: ubuntu-latest
@@ -40,8 +41,11 @@ jobs:
           name: lint-report
           path: app/build/reports/lint-results-debug.html
 
-      - name: Run Unit Tests + Coverage
+      - name: Run Unit Tests
         run: ./gradlew testDebugUnitTest
+
+      - name: Generate Jacoco Coverage Report
+        run: ./gradlew app:jacocoTestReport
 
       - name: Upload Unit Test Report
         uses: actions/upload-artifact@v4
@@ -55,7 +59,7 @@ jobs:
         if: always()
         with:
           name: coverage-report
-          path: app/build/reports/coverage/androidTest/debug/
+          path: app/build/reports/jacoco/jacocoTestReport/
 
       - name: Build Debug APK
         run: ./gradlew assembleDebug
